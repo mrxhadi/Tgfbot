@@ -9,24 +9,19 @@ ADMIN_ID = int(os.getenv("ADMIN_ID"))
 @events.register(events.NewMessage)
 async def handle_admin_commands(event):
     if event.sender_id != ADMIN_ID:
-        print(f"[🚫] Unauthorized user tried to interact: {event.sender_id}")
-        return
+        return  # نادیده گرفتن پیام‌های غیر ادمین
 
+    # بررسی ارسال دستور `/list`
     message_text = event.raw_text.strip()
-
     if message_text == "/list":
-        print(f"[📂] Sending database to admin: {event.sender_id}")
         await event.client.send_file(event.chat_id, "database.json", caption="Database file")
         return
 
+    # بررسی ارسال فایل دیتابیس
     if event.file and event.file.name.endswith(".json"):
         file_path = await event.download_media("database.json")
         with open(file_path, "r", encoding="utf-8") as f:
             new_data = json.load(f)
-            db.replace_database(new_data)
+            db.replace_database(new_data)  # جایگزینی دیتابیس جدید
 
-        print(f"[✅] Database updated by admin: {event.sender_id}")
-        await event.reply("Database updated successfully.")
-        return
-
-    print(f"[🚫] Ignoring non-command message from admin: {event.sender_id}")
+        await event.reply("✅ Database updated successfully.")
