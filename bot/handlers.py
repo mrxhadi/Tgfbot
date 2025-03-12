@@ -6,7 +6,7 @@ from database import Database
 db = Database()
 ADMIN_ID = int(os.getenv("ADMIN_ID"))
 
-@events.register(events.NewMessage(pattern="^/list$"))
+@events.register(events.NewMessage(pattern=r"^/list$"))  # بررسی اینکه پیام دقیقاً /list باشد
 async def send_database(event):
     if event.sender_id != ADMIN_ID:
         print(f"[🚫] Unauthorized user tried to access /list: {event.sender_id}")
@@ -20,18 +20,18 @@ async def receive_database(event):
     if event.sender_id != ADMIN_ID:
         print(f"[🚫] Unauthorized user tried to send a database file: {event.sender_id}")
         return
-    
-    # پیام‌های معمولی را نادیده بگیر
+
+    # نادیده گرفتن پیام‌های معمولی
     if not event.file:
         print(f"[🚫] Ignoring non-file message from admin: {event.sender_id}")
         return
 
-    # بررسی اینکه فایل JSON هست یا نه
+    # بررسی اینکه فایل JSON است
     if not event.file.name.endswith(".json"):
         print(f"[🚫] Ignoring non-JSON file from admin: {event.sender_id}")
         return
 
-    # دریافت و جایگزینی دیتابیس
+    # جایگزینی دیتابیس
     file_path = await event.download_media("database.json")
     with open(file_path, "r", encoding="utf-8") as f:
         new_data = json.load(f)
