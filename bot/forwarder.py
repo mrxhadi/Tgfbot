@@ -4,7 +4,7 @@ from filters import process_message
 
 db = Database()
 
-@events.register(events.NewMessage(chats=list(db.get_channels().keys())))
+@events.register(events.NewMessage(chats=list(map(int, db.get_channels().keys()))))  # دریافت پیام فقط از کانال‌های مبدا
 async def forward_message(event):
     source_chat = event.chat_id
     dest_chat = db.get_channels().get(str(source_chat))
