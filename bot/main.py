@@ -15,6 +15,6 @@ client.add_event_handler(receive_database)
 client.add_event_handler(forward_message)
 
 if __name__ == "__main__":
-    print("Bot is running...")
+    print("Bot is running... Monitoring channels:", db.get_channels().keys())
     client.start()
     client.run_until_disconnected()
