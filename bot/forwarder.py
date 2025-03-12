@@ -4,32 +4,19 @@ from filters import process_message
 
 db = Database()
 
-@events.register(events.NewMessage())
+@events.register(events.NewMessage(func=lambda e: str(e.chat_id) in db.get_channels()))
 async def forward_message(event):
     source_chat = event.chat_id
     dest_chat = db.get_channels().get(str(source_chat))
 
-    # جلوگیری از پردازش پیام‌های پیوی و گروه‌ها
-    if not event.is_channel:
-        print(f"[🚫] Ignoring non-channel message from: {source_chat}")
-        return
-
-    # فقط پیام‌هایی که مستقیماً در کانال ارسال شده‌اند، نه فوروارد شده‌ها
-    if event.fwd_from:
-        print(f"[🚫] Ignoring forwarded message from: {source_chat}")
-        return
-
+    # فقط پردازش کانال‌های موجود در دیتابیس
     if not dest_chat:
-        print(f"[❌] No destination found for source: {source_chat}")
         return
 
     text = event.raw_text
-    print(f"[✅] Received message from {source_chat}: {text}")
 
+    # فیلتر کردن پیام
     processed_text = process_message(text)
 
     if processed_text:
-        print(f"[🔄] Forwarding to {dest_chat}: {processed_text}")
         await event.client.send_message(int(dest_chat), processed_text)
-    else:
-        print(f"[🚫] Message blocked by filters: {text}")
