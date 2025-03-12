@@ -4,12 +4,17 @@ from filters import process_message
 
 db = Database()
 
-@events.register(events.NewMessage(func=lambda e: e.is_channel and str(e.chat_id) in db.get_channels()))
+@events.register(events.NewMessage())
 async def forward_message(event):
     source_chat = event.chat_id
     dest_chat = db.get_channels().get(str(source_chat))
 
-    # نادیده گرفتن پیام‌های فوروارد شده
+    # جلوگیری از پردازش پیام‌های پیوی و گروه‌ها
+    if not event.is_channel:
+        print(f"[🚫] Ignoring non-channel message from: {source_chat}")
+        return
+
+    # فقط پیام‌هایی که مستقیماً در کانال ارسال شده‌اند، نه فوروارد شده‌ها
     if event.fwd_from:
         print(f"[🚫] Ignoring forwarded message from: {source_chat}")
         return
