@@ -6,36 +6,27 @@ from database import Database
 db = Database()
 ADMIN_ID = int(os.getenv("ADMIN_ID"))
 
-@events.register(events.NewMessage(pattern=r"^/list$"))  # بررسی اینکه پیام دقیقاً /list باشد
-async def send_database(event):
+@events.register(events.NewMessage)
+async def handle_admin_commands(event):
     if event.sender_id != ADMIN_ID:
-        print(f"[🚫] Unauthorized user tried to access /list: {event.sender_id}")
-        return
-    
-    print(f"[📂] Sending database to admin: {event.sender_id}")
-    await event.client.send_file(event.chat_id, "database.json", caption="Database file")
-
-@events.register(events.NewMessage(incoming=True))
-async def receive_database(event):
-    if event.sender_id != ADMIN_ID:
-        print(f"[🚫] Unauthorized user tried to send a database file: {event.sender_id}")
+        print(f"[🚫] Unauthorized user tried to interact: {event.sender_id}")
         return
 
-    # نادیده گرفتن پیام‌های معمولی
-    if not event.file:
-        print(f"[🚫] Ignoring non-file message from admin: {event.sender_id}")
+    message_text = event.raw_text.strip()
+
+    if message_text == "/list":
+        print(f"[📂] Sending database to admin: {event.sender_id}")
+        await event.client.send_file(event.chat_id, "database.json", caption="Database file")
         return
 
-    # بررسی اینکه فایل JSON است
-    if not event.file.name.endswith(".json"):
-        print(f"[🚫] Ignoring non-JSON file from admin: {event.sender_id}")
+    if event.file and event.file.name.endswith(".json"):
+        file_path = await event.download_media("database.json")
+        with open(file_path, "r", encoding="utf-8") as f:
+            new_data = json.load(f)
+            db.replace_database(new_data)
+
+        print(f"[✅] Database updated by admin: {event.sender_id}")
+        await event.reply("Database updated successfully.")
         return
 
-    # جایگزینی دیتابیس
-    file_path = await event.download_media("database.json")
-    with open(file_path, "r", encoding="utf-8") as f:
-        new_data = json.load(f)
-        db.replace_database(new_data)
-
-    print(f"[✅] Database updated by admin: {event.sender_id}")
-    await event.reply("Database updated successfully.")
+    print(f"[🚫] Ignoring non-command message from admin: {event.sender_id}")
