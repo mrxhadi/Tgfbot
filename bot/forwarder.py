@@ -4,10 +4,15 @@ from filters import process_message
 
 db = Database()
 
-@events.register(events.NewMessage(chats=list(map(int, db.get_channels().keys()))))  # دریافت پیام فقط از کانال‌های مبدا
+@events.register(events.NewMessage(chats=list(map(int, db.get_channels().keys())))))  # فقط کانال‌های ثبت‌شده
 async def forward_message(event):
     source_chat = event.chat_id
     dest_chat = db.get_channels().get(str(source_chat))
+
+    # بررسی اینکه پیام از چت خصوصی نیست
+    if source_chat > 0:  # چت‌های خصوصی آیدی مثبت دارن، اما کانال‌ها آیدی منفی دارن
+        print(f"[🚫] Ignoring private message from: {source_chat}")
+        return
 
     if not dest_chat:
         print(f"[❌] No destination found for source: {source_chat}")
