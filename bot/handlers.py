@@ -18,4 +18,7 @@ async def receive_database(event):
             with open(file_path, "r", encoding="utf-8") as f:
                 new_data = json.load(f)
                 db.replace_database(new_data)
+
+            print("Database updated! Monitoring channels:", db.get_channels().keys())
+
             await event.reply("Database updated successfully.")
