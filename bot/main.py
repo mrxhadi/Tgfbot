@@ -1,7 +1,7 @@
 import os
 from telethon import TelegramClient
 from telethon.sessions import StringSession
-from handlers import handle_admin_commands
+from handlers import handle_admin_commands  # ایمپورت جدید
 from forwarder import forward_message
 
 API_ID = int(os.getenv("API_ID"))
@@ -10,7 +10,7 @@ STRING_SESSION = os.getenv("STRING_SESSION")
 
 client = TelegramClient(StringSession(STRING_SESSION), API_ID, API_HASH)
 
-client.add_event_handler(handle_admin_commands)
+client.add_event_handler(handle_admin_commands)  # اصلاح‌شده
 client.add_event_handler(forward_message)
 
 if __name__ == "__main__":
