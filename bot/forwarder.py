@@ -18,6 +18,7 @@ async def forward_message(event):
 
     if source_chat in text_only_channels:
         if event.media and not text:
+            print(f"[🚫] Ignoring media message without caption from text-only channel: {source_chat}")
             return
         if processed_text:
             await event.client.send_message(int(dest_chat), processed_text)
