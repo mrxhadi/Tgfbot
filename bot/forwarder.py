@@ -4,7 +4,7 @@ from filters import process_message
 
 db = Database()
 
-@events.register(events.NewMessage(func=lambda e: str(e.chat_id) in db.get_channels()))
+@events.register(events.NewMessage)
 async def forward_message(event):
     source_chat = event.chat_id
     dest_chat = db.get_channels().get(str(source_chat))
