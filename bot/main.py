@@ -1,7 +1,7 @@
 import os
 from telethon import TelegramClient
 from telethon.sessions import StringSession
-from handlers import handle_admin_commands  # ایمپورت جدید
+from handlers import handle_admin_commands
 from forwarder import forward_message
 
 API_ID = int(os.getenv("API_ID"))
