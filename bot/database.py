@@ -4,13 +4,18 @@ import json
 DATABASE_PATH = "database.json"
 
 class Database:
-    def __init__(self):
-        self.data = None  # مقدار اولیه None تا وقتی که دیتابیس دریافت شود
-        if os.path.exists(DATABASE_PATH):
-            self._load_database()
-            print(f"[INFO] Database loaded: {self.data}")
-        else:
-            print("[WARNING] No database found. Waiting for database upload...")
+    _instance = None  # ذخیره تنها نمونه کلاس
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(Database, cls).__new__(cls)
+            cls._instance.data = None  # مقدار اولیه
+            if os.path.exists(DATABASE_PATH):
+                cls._instance._load_database()
+                print(f"[INFO] Database loaded: {cls._instance.data}")
+            else:
+                print("[WARNING] No database found. Waiting for database upload...")
+        return cls._instance
 
     def _load_database(self):
         with open(DATABASE_PATH, "r", encoding="utf-8") as f:
@@ -23,7 +28,7 @@ class Database:
 
     def replace_database(self, new_data):
         print(f"[INFO] Replacing database with new data...")
-        self.data = new_data.copy()  # اطمینان از این که مقدار جدید به درستی ذخیره شده
+        self.data = new_data.copy()  # اطمینان از این که مقدار جدید ذخیره می‌شود
         self._save_database()
         self._load_database()
         print(f"[INFO] Database successfully loaded into memory: {self.data}")
