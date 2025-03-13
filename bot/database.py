@@ -31,10 +31,15 @@ class Database:
         print("[💾] Database saved!")
 
     def replace_database(self, new_data):
-        print(f"[🔄] Replacing database with new data: {new_data}")
-        self.data = new_data.copy()
-        self._save_database()
+        print(f"[🔄] Replacing database with new data: {new_data}")  # لاگ مقدار جدید
+    
+        with open(DATABASE_PATH, "w", encoding="utf-8") as f:
+            json.dump(new_data, f, indent=4, ensure_ascii=False)
+    
+        print("[💾] Database saved!")
+    
         self._load_database()
+        print(f"[✅] Database successfully loaded into memory: {self.data}")
         
     def get_channels(self):
         print(f"[🔍] get_channels() returning: {self.data.get('channels', {})}")
