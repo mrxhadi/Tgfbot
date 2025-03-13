@@ -37,16 +37,14 @@ class Database:
         if self.data is None:
             print("[WARNING] Database is not loaded. Returning empty channels.")
             return {}
-        channels = self.data.get("channels", {})
-        print(f"[DEBUG] get_channels() returning: {channels}")
-        return channels
-        
+        return self.data.get("channels", {})
+
     def get_text_only_channels(self):
         if self.data is None:
-        print("[WARNING] Database is not loaded. Returning empty text-only channels.")
+            print("[WARNING] Database is not loaded. Returning empty text-only channels.")
             return []
         return self.data.get("text_only_channels", [])
-    
+
     def get_filters(self):
         if self.data is None:
             print("[WARNING] Database is not loaded. Returning default filters.")
