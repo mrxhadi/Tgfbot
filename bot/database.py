@@ -32,7 +32,7 @@ class Database:
 
     def replace_database(self, new_data):
         print(f"[🔄] Replacing database with new data: {new_data}")
-        self.data = new_data
+        self.data = new_data.copy()
         self._save_database()
         self._load_database()
         
