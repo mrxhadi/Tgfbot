@@ -1,11 +1,10 @@
-import json
 import os
+import json
 
 DATABASE_PATH = "database.json"
 
-
 DEFAULT_DATABASE = {
-    "channels": {},  # {"source_channel_id": "destination_channel_id"}
+    "channels": {},
     "filters": {
         "remove_words": [],
         "replace_words": {},
@@ -16,9 +15,9 @@ DEFAULT_DATABASE = {
 class Database:
     def __init__(self):
         self._load_database()
+        print(f"[🔄] Database loaded: {self.data}")
 
     def _load_database(self):
-        
         if os.path.exists(DATABASE_PATH):
             with open(DATABASE_PATH, "r", encoding="utf-8") as f:
                 self.data = json.load(f)
@@ -27,12 +26,11 @@ class Database:
             self._save_database()
 
     def _save_database(self):
-        
         with open(DATABASE_PATH, "w", encoding="utf-8") as f:
             json.dump(self.data, f, indent=4, ensure_ascii=False)
+        print("[💾] Database saved!")
 
     def replace_database(self, new_data):
-        
         self.data = new_data
         self._save_database()
 
