@@ -22,6 +22,7 @@ async def handle_admin_commands(event):
         file_path = await event.download_media("database.json")
         with open(file_path, "r", encoding="utf-8") as f:
             new_data = json.load(f)
+            print(f"[📥] Received database: {new_data}")
             db.replace_database(new_data)  # جایگزینی دیتابیس جدید
 
         await event.reply("✅ Database updated successfully.")
