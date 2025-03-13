@@ -37,6 +37,7 @@ class Database:
         self._load_database()
         
     def get_channels(self):
+        print(f"[🔍] get_channels() returning: {self.data.get('channels', {})}")
         return self.data.get("channels", {})
 
     def get_filters(self):
