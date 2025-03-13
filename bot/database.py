@@ -33,7 +33,8 @@ class Database:
     def replace_database(self, new_data):
         self.data = new_data
         self._save_database()
-
+        self._load_database()
+        
     def get_channels(self):
         return self.data.get("channels", {})
 
