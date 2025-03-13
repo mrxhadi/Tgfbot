@@ -31,6 +31,7 @@ class Database:
         print("[💾] Database saved!")
 
     def replace_database(self, new_data):
+        print(f"[🔄] Replacing database with new data: {new_data}")
         self.data = new_data
         self._save_database()
         self._load_database()
