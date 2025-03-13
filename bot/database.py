@@ -4,12 +4,12 @@ import json
 DATABASE_PATH = "database.json"
 
 class Database:
-    _instance = None  # ذخیره تنها نمونه کلاس
+    _instance = None
 
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super(Database, cls).__new__(cls)
-            cls._instance.data = None  # مقدار اولیه
+            cls._instance.data = None
             if os.path.exists(DATABASE_PATH):
                 cls._instance._load_database()
                 print(f"[INFO] Database loaded: {cls._instance.data}")
@@ -28,7 +28,7 @@ class Database:
 
     def replace_database(self, new_data):
         print(f"[INFO] Replacing database with new data...")
-        self.data = new_data.copy()  # اطمینان از این که مقدار جدید ذخیره می‌شود
+        self.data = new_data.copy()
         self._save_database()
         self._load_database()
         print(f"[INFO] Database successfully loaded into memory: {self.data}")
@@ -40,7 +40,13 @@ class Database:
         channels = self.data.get("channels", {})
         print(f"[DEBUG] get_channels() returning: {channels}")
         return channels
-
+        
+    def get_text_only_channels(self):
+        if self.data is None:
+        print("[WARNING] Database is not loaded. Returning empty text-only channels.")
+            return []
+        return self.data.get("text_only_channels", [])
+    
     def get_filters(self):
         if self.data is None:
             print("[WARNING] Database is not loaded. Returning default filters.")
