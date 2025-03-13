@@ -9,6 +9,7 @@ async def forward_message(event):
     source_chat = event.chat_id
     dest_chat = db.get_channels().get(str(source_chat))
 
+    print(f"[ℹ️] Current channels mapping: {db.get_channels()}")
     print(f"[✅] forward_message triggered from: {source_chat}")
 
     if not dest_chat:
