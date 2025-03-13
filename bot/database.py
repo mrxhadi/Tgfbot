@@ -42,8 +42,13 @@ class Database:
         print(f"[✅] Database successfully loaded into memory: {self.data}")
         
     def get_channels(self):
-        print(f"[🔍] get_channels() returning: {self.data.get('channels', {})}")
-        return self.data.get("channels", {})
+        if not hasattr(self, 'data'):
+        print("[⚠️] Warning: self.data is not set. Reloading database...")
+        self._load_database()
+    
+    channels = self.data.get("channels", {})
+    print(f"[🔍] Updated get_channels() returning: {channels}")
+    return channels
 
     def get_filters(self):
         return self.data.get("filters", {})
