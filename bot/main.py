@@ -15,4 +15,5 @@ client.add_event_handler(forward_message)
 
 if __name__ == "__main__":
     client.start()
+    print("[ℹ️] Bot is running and waiting for messages...")
     client.run_until_disconnected()
